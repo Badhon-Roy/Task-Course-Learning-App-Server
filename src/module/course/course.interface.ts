@@ -8,4 +8,5 @@ export interface ICourse {
     likes: number;
     likedBy: Schema.Types.ObjectId[];
     feedbacks: { student: Schema.Types.ObjectId; comment: string }[];
+    followers: Types.ObjectId[];  // ref : 'User'
 }

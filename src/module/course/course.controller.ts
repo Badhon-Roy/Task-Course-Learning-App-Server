@@ -121,6 +121,46 @@ const courseAnalytics = catchAsync(async (req, res) => {
     });
 });
 
+// Follow a course
+const followCourse = catchAsync(async (req, res) => {
+    const courseId = req.params.id;
+    const studentId = '68add95e6ff33924417ec79a'; //TODO: must be change with logged in user id
+    const result = await CourseServices.followCourse(courseId, studentId);
+
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "You are now following this course",
+        data: result,
+    });
+});
+
+// Get all followers
+const getCourseFollowers = catchAsync(async (req, res) => {
+    const courseId = req.params.id;
+    const result = await CourseServices.getCourseFollowers(courseId);
+
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Course followers retrieved",
+        data: result?.followers,
+    });
+});
+
+// Get engagement stats
+const getEngagement = catchAsync(async (req, res) => {
+    const courseId = req?.params?.id;
+    const result = await CourseServices.getCourseEngagement(courseId);
+
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Course engagement retrieved",
+        data: result,
+    });
+});
+
 
 export const CourseControllers = {
     createCourse,
@@ -131,4 +171,7 @@ export const CourseControllers = {
     likeCourse,
     addFeedback,
     courseAnalytics,
+    followCourse,
+    getCourseFollowers,
+    getEngagement
 };

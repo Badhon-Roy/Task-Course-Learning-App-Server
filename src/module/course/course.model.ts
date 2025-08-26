@@ -35,6 +35,12 @@ const courseSchema = new Schema<ICourse>({
             comment: { type: String },
         },
     ],
+    followers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 },
     { timestamps: true });
 
