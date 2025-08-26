@@ -14,7 +14,27 @@ const courseSchema = new Schema<ICourse>({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    views: {
+        type: Number,
+        default: 0
+    },
+    likes: {
+        type: Number,
+        default: 0
+    },
+    likedBy: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
+    feedbacks: [
+        {
+            student: { type: Schema.Types.ObjectId, ref: "User" },
+            comment: { type: String },
+        },
+    ],
 },
     { timestamps: true });
 
