@@ -24,6 +24,14 @@ const userSchema = new Schema<IUser, UserModel>({
         enum: ['student', 'teacher'],
         default: 'student'
     },
+    followingTeachers: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }],
 },
     {
         timestamps: true
