@@ -1,8 +1,9 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./user.interface";
-import e from "express";
+import { IUser, UserModel } from "./user.interface";
+import bcrypt from 'bcrypt';
+import config from "../../config";
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, UserModel>({
     name: {
         type: String,
         required: true
@@ -24,7 +25,40 @@ const userSchema = new Schema<IUser>({
         default: 'student'
     },
 },
-    { timestamps: true });
+    {
+        timestamps: true
+    }
+);
 
-const User = model<IUser>('User', userSchema);
+userSchema.pre('save', async function (next) {
+    const user = this as any;
+    if (!user.password) {
+        return next();
+    };
+
+    // hashing the password
+    user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_salt_rounds)
+    )
+    next();
+})
+
+// userSchema.post('save', function (doc, next) {
+//     doc.password = '';
+//     next();
+// });
+
+userSchema.statics.isUserExistsByEmail = async function (email: string) {
+    return await User.findOne({ email })
+}
+
+userSchema.statics.isPasswordMatched = async function (plainTextPassword,
+    hashedPassword) {
+    return await bcrypt.compare(plainTextPassword, hashedPassword);
+}
+
+
+
+const User = model<IUser, UserModel>('User', userSchema);
 export default User;
