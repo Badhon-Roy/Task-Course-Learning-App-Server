@@ -12,8 +12,6 @@ const loginUser = async (payload: ILoginUser) => {
     if (!(await User.isUserExistsByEmail(payload?.email))) {
         throw new AppError(404, "This user is not found !");
     }
-    console.log("Plain:", payload?.password);
-    console.log("Hashed:", user?.password);
 
     // match the password
     if (!(await User.isPasswordMatched(payload?.password, user?.password as string))) {
@@ -33,9 +31,12 @@ const loginUser = async (payload: ILoginUser) => {
         config.jwt_access_token_expires_in
     );
 
+    const refreshToken = createToken(jwtPayload, config.jwt_refresh_secret as string, config.jwt_refresh_expires_in as string)
+
 
     return {
-        accessToken
+        accessToken,
+        refreshToken
     };
 }
 
