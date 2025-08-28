@@ -8,7 +8,10 @@ const topicSchema = new Schema<ITopic>(
             type: String,
             required: true
         },
-        content: { type: String },
+        content: {
+            type: String,
+            required: true
+        },
         lesson: {
             type: Schema.Types.ObjectId,
             ref: "Lesson",
