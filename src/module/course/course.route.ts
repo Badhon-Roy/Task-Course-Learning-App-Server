@@ -2,6 +2,8 @@ import { Router } from "express";
 import { CourseControllers } from "./course.controller";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "../user/user.constant";
+import validateRequest from "../../middlewares/validateRequest";
+import { CourseValidations } from "./course.validation";
 
 
 const router = Router();
@@ -11,8 +13,8 @@ router.get('/:courseId', CourseControllers.getSingleCourse);
 
 
 // Teacher actions
-router.post('/create-course', auth(USER_ROLE.teacher), CourseControllers.createCourse),
-router.patch('/update-course/:id', auth(USER_ROLE.teacher), CourseControllers.updateCourse);
+router.post('/create-course',validateRequest(CourseValidations.createCourseValidation), auth(USER_ROLE.teacher), CourseControllers.createCourse),
+router.patch('/update-course/:id',validateRequest(CourseValidations.updateCourseValidation), auth(USER_ROLE.teacher), CourseControllers.updateCourse);
 router.delete('/delete-course/:id', auth(USER_ROLE.teacher), CourseControllers.deleteCourse);
 router.get("/performance/analytics", auth(USER_ROLE.teacher), CourseControllers.courseAnalytics);
 
