@@ -1,4 +1,6 @@
+import AppError from "../../errors/AppError";
 import catchAsync from "../../utils/catchAsync";
+import Lesson from "./lesson.model";
 import { LessonServices } from "./lesson.service";
 
 
@@ -7,7 +9,15 @@ const createLesson = catchAsync(async (req, res) => {
   const lesson = {
     ...req.body,
   };
+
+  // Check if lesson with the same title already exists
+  const isExistLesson = await Lesson.findOne({ title: lesson?.title });
+  if (isExistLesson) {
+    throw new AppError(400,"This lesson already exists");
+  }
+
   const result = await LessonServices.createLessonInDB(lesson);
+  
   res.status(200).json({
     success: true,
     statusCode: 200,

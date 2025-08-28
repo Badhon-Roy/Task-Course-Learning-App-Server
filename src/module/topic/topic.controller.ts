@@ -1,4 +1,6 @@
+import AppError from "../../errors/AppError";
 import catchAsync from "../../utils/catchAsync";
+import Topic from "./topic.model";
 import { TopicServices } from "./topic.service";
 
 
@@ -7,6 +9,12 @@ const createTopic = catchAsync(async (req, res) => {
   const topic = {
     ...req.body,
   };
+
+  const isExistTopic = await Topic.findOne({ title: topic?.title });
+  if (isExistTopic) {
+    throw new AppError(400,"This topic already exists");
+  }
+
   const result = await TopicServices.createTopicInDB(topic);
   res.status(201).json({
     success: true,

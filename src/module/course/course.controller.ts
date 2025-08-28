@@ -1,13 +1,23 @@
 // controllers/course.controller.ts
+import AppError from "../../errors/AppError";
 import catchAsync from "../../utils/catchAsync";
+import Course from "./course.model";
 import { CourseServices } from "./course.service";
 
 // Create a new course
 const createCourse = catchAsync(async (req, res) => {
+  
     const course = {
         ...req.body,
-        teacher: req.user._id
+        teacher: req.user.id
     };
+
+    // Check if course with the same title already exists
+    const isExistCourse = await Course.findOne({ title: course?.title });
+    if (isExistCourse) {
+        throw new AppError(400,"This course already exists");
+    }
+
     const result = await CourseServices.createCourseIntoDB(course);
     res.status(201).json({
         success: true,
@@ -80,7 +90,7 @@ const viewCourse = catchAsync(async (req, res) => {
 // Like a course
 const likeCourse = catchAsync(async (req, res) => {
     const courseId = req.params.id;
-    const studentId = req.user._id;
+    const studentId = req.user.id;
     const result = await CourseServices.likeCourse(courseId, studentId);
 
     res.status(200).json({
@@ -94,8 +104,8 @@ const likeCourse = catchAsync(async (req, res) => {
 // Add feedback
 const addFeedback = catchAsync(async (req, res) => {
     const courseId = req.params.id;
-    //   const studentId = req.user._id;
-    const studentId = req.user._id;
+    //   const studentId = req.user.id;
+    const studentId = req.user.id;
     const { comment } = req.body;
     const result = await CourseServices.addCourseFeedback(courseId, studentId, comment);
 
@@ -109,8 +119,8 @@ const addFeedback = catchAsync(async (req, res) => {
 
 // Get analytics for teacher
 const courseAnalytics = catchAsync(async (req, res) => {
-    //   const teacherId = req.user._id;
-    const teacherId = req.user._id;
+    //   const teacherId = req.user.id;
+    const teacherId = req.user.id;
     const result = await CourseServices.getCourseAnalytics(teacherId);
 
     res.status(200).json({
@@ -124,7 +134,7 @@ const courseAnalytics = catchAsync(async (req, res) => {
 // Follow a course
 const followCourse = catchAsync(async (req, res) => {
     const courseId = req.params.id;
-    const studentId = req.user._id;
+    const studentId = req.user.id;
     const result = await CourseServices.followCourse(courseId, studentId);
 
     res.status(200).json({

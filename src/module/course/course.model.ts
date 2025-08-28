@@ -12,8 +12,7 @@ const courseSchema = new Schema<ICourse>({
     },
     teacher: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
     },
     views: {
         type: Number,

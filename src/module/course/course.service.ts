@@ -12,7 +12,7 @@ const createCourseIntoDB = async (course: ICourse) => {
 // get all courses from the database
 const getAllCoursesFromDB = async () => {
   const result = await Course.find()
-    .populate('teacher')
+    .populate('teacher', "name email")
     .populate('likedBy', "name email")
     .populate('feedbacks.student', "name email")
     .populate('followers', "name email");

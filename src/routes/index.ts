@@ -5,6 +5,7 @@ import { lessonRouter } from "../module/lesson/lesson.route";
 import { topicRouter } from "../module/topic/topic.route";
 import { authRouter } from "../module/auth/auth.route";
 import { enrollmentRouter } from "../module/enrollment/enrollment.route";
+import { engagementRouter } from "../module/engagement/engagement.route";
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
     {
         path: '/enrollment',
         route: enrollmentRouter
+    },
+    {
+        path: '/engagement',
+        route: engagementRouter
     },
 ]
 

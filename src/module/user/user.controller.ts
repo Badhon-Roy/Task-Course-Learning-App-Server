@@ -16,7 +16,7 @@ const createUser = catchAsync(async (req, res) => {
 
 // Student follows a teacher
 const followTeacher = catchAsync(async (req, res) => {
-  const studentId = req.user._id;
+  const studentId = req.user.id;
   const teacherId = req.params.teacherId;
 
   const result = await UserServices.followTeacher(studentId, teacherId);
