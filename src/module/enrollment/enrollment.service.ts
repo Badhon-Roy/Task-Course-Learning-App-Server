@@ -10,7 +10,6 @@ const enrollInCourse = async (studentId: string, courseId: string) => {
 
   const lessons = await Lesson.find({ course: courseId }).select("_id").lean();
   const lessonIds = lessons.map(l => l._id);
-
   const topics = await Topic.find({ lesson: { $in: lessonIds } }).select("_id").lean();
   const topicIds = topics.map(t => t._id);
 

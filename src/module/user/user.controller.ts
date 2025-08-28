@@ -1,9 +1,20 @@
 import catchAsync from "../../utils/catchAsync";
+import User from "./user.model";
 import { UserServices } from "./user.service";
 
 
 const createUser = catchAsync(async (req, res) => {
   const user = req.body;
+
+  const isExistUser = await User.findOne({ email: user.email });
+  if (isExistUser) {
+    return res.status(409).json({
+      success: false,
+      statusCode: 409,
+      message: 'User already exists'
+    });
+  }
+
   const result = await UserServices.createUserIntoDB(user);
   res.status(200).json({
     success: true,

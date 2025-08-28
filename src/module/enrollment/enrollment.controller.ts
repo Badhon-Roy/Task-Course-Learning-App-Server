@@ -1,11 +1,18 @@
-import { Request } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { EnrollmentService } from "./enrollment.service";
 import Enrollment from "./enrollment.model";
+import Course from "../course/course.model";
+import AppError from "../../errors/AppError";
 
 const enroll = catchAsync(async (req, res) => {
     const studentId = req?.user?.id;
     const { courseId } = req.body;
+    
+    // Check if course exists
+    const isExistCourse = await Course.findById(courseId);
+    if (!isExistCourse) {
+        throw new AppError(404, "Course not found");
+    }
 
     // Check if already enrolled
     const isAlreadyEnrolled = await Enrollment.findOne({ student: studentId, course: courseId });
