@@ -6,6 +6,7 @@ import { USER_ROLE } from "./user.constant";
 const router = Router();
 
 router.post('/create-user', UserControllers.createUser)
+router.get('/', UserControllers.getAllUsers);
 router.put("/:teacherId/follow", auth(USER_ROLE.student), UserControllers.followTeacher);
 router.get("/:teacherId/followers", UserControllers.getTeacherFollowers);
 

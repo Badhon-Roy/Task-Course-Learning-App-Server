@@ -35,8 +35,22 @@ const getEngagementByStudent = catchAsync(async (req, res) => {
   });
 });
 
+// Get course engagement analytics
+const getCourseEngagement = catchAsync(async (req, res) => {
+    const { courseId } = req.params;
+    const result = await EngagementServices.getCourseEngagement(courseId);
+
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Course engagement retrieved",
+        data: result,
+    });
+});
+
 export const EngagementControllers = {
   createEngagement,
   getAllEngagements,
   getEngagementByStudent,
+  getCourseEngagement
 };

@@ -13,6 +13,17 @@ const createUser = catchAsync(async (req, res) => {
     })
 });
 
+// Get all users
+const getAllUsers = catchAsync(async (req, res) => {
+    const result = await UserServices.getAllUsersFromDB();
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: 'Users retrieved successfully',
+        data: result
+    })
+});
+
 
 // Student follows a teacher
 const followTeacher = catchAsync(async (req, res) => {
@@ -45,6 +56,7 @@ const getTeacherFollowers = catchAsync(async (req, res) => {
 
 export const UserControllers = {
     createUser,
+    getAllUsers,
     followTeacher,
     getTeacherFollowers
 }

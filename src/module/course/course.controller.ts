@@ -6,7 +6,7 @@ import { CourseServices } from "./course.service";
 
 // Create a new course
 const createCourse = catchAsync(async (req, res) => {
-  
+
     const course = {
         ...req.body,
         teacher: req.user.id
@@ -15,7 +15,7 @@ const createCourse = catchAsync(async (req, res) => {
     // Check if course with the same title already exists
     const isExistCourse = await Course.findOne({ title: course?.title });
     if (isExistCourse) {
-        throw new AppError(400,"This course already exists");
+        throw new AppError(400, "This course already exists");
     }
 
     const result = await CourseServices.createCourseIntoDB(course);
@@ -76,7 +76,7 @@ const deleteCourse = catchAsync(async (req, res) => {
 
 // Increment course view
 const viewCourse = catchAsync(async (req, res) => {
-    const courseId = req.params.id;
+    const { courseId } = req.params;
     const result = await CourseServices.incrementCourseView(courseId);
 
     res.status(200).json({
@@ -89,7 +89,7 @@ const viewCourse = catchAsync(async (req, res) => {
 
 // Like a course
 const likeCourse = catchAsync(async (req, res) => {
-    const courseId = req.params.id;
+    const { courseId } = req.params;
     const studentId = req.user.id;
     const result = await CourseServices.likeCourse(courseId, studentId);
 
@@ -103,8 +103,7 @@ const likeCourse = catchAsync(async (req, res) => {
 
 // Add feedback
 const addFeedback = catchAsync(async (req, res) => {
-    const courseId = req.params.id;
-    //   const studentId = req.user.id;
+    const {courseId} = req.params;
     const studentId = req.user.id;
     const { comment } = req.body;
     const result = await CourseServices.addCourseFeedback(courseId, studentId, comment);
@@ -158,19 +157,6 @@ const getCourseFollowers = catchAsync(async (req, res) => {
     });
 });
 
-// Get engagement stats
-const getEngagement = catchAsync(async (req, res) => {
-    const courseId = req?.params?.id;
-    const result = await CourseServices.getCourseEngagement(courseId);
-
-    res.status(200).json({
-        success: true,
-        statusCode: 200,
-        message: "Course engagement retrieved",
-        data: result,
-    });
-});
-
 
 export const CourseControllers = {
     createCourse,
@@ -182,6 +168,5 @@ export const CourseControllers = {
     addFeedback,
     courseAnalytics,
     followCourse,
-    getCourseFollowers,
-    getEngagement
+    getCourseFollowers
 };

@@ -103,22 +103,7 @@ const getCourseFollowers = async (courseId: string) => {
   return Course.findById(courseId).populate("followers", "name email");
 };
 
-// Track student engagement: views, likes, feedback count
-const getCourseEngagement = async (courseId: string) => {
-  const course = await Course.findById(courseId).populate("feedbacks.student", "name email");
-  if (!course) throw new AppError(404,"Course not found");
 
-  return {
-    views: course.views,
-    likes: course.likes,
-    feedbackCount: course.feedbacks.length,
-    feedbacks: course.feedbacks.map(f => ({
-      student: f.student,
-      comment: f.comment,
-    })),
-    followers: course.followers.length,
-  };
-};
 
 
 
@@ -133,5 +118,4 @@ export const CourseServices = {
   getCourseAnalytics,
   followCourse,
   getCourseFollowers,
-  getCourseEngagement,
 }

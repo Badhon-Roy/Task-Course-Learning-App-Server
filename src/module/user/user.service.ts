@@ -10,6 +10,12 @@ const createUserIntoDB = async (user: IUser) => {
     return result;
 }
 
+// get all users from the database
+const getAllUsersFromDB = async () => {
+    const result = await User.find().populate("followingTeachers", "name email").populate("followers", "name email");
+    return result;
+}
+
 
 const followTeacher = async (studentId: string, teacherId: string) => {
     if (studentId === teacherId) throw new AppError(404, "You cannot follow yourself");
@@ -46,6 +52,7 @@ const getTeacherFollowers = async (teacherId: string) => {
 
 export const UserServices = {
     createUserIntoDB,
+    getAllUsersFromDB,
     followTeacher,
     getTeacherFollowers
 }
