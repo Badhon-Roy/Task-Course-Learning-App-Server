@@ -4,28 +4,28 @@ import auth from "../../middlewares/auth";
 import { USER_ROLE } from "../user/user.constant";
 
 
-const route = Router();
+const router = Router();
 
-route.get('/get-courses', CourseControllers.getAllCourses);
+router.get('/', CourseControllers.getAllCourses);
+router.get('/:courseId', CourseControllers.getSingleCourse);
+
 
 // Teacher actions
-route.post('/create-course', auth(USER_ROLE.teacher), CourseControllers.createCourse),
-route.patch('/update-course/:id', auth(USER_ROLE.teacher), CourseControllers.updateCourse);
-route.delete('/delete-course/:id', auth(USER_ROLE.teacher), CourseControllers.deleteCourse);
-route.get("/performance/analytics", auth(USER_ROLE.teacher), CourseControllers.courseAnalytics);
+router.post('/create-course', auth(USER_ROLE.teacher), CourseControllers.createCourse),
+router.patch('/update-course/:id', auth(USER_ROLE.teacher), CourseControllers.updateCourse);
+router.delete('/delete-course/:id', auth(USER_ROLE.teacher), CourseControllers.deleteCourse);
+router.get("/performance/analytics", auth(USER_ROLE.teacher), CourseControllers.courseAnalytics);
 
 
 // Student actions
-route.put("/:courseId/view", auth(USER_ROLE.student), CourseControllers.viewCourse);
-route.put("/:courseId/like", auth(USER_ROLE.student), CourseControllers.likeCourse);
-route.post("/:courseId/feedback", auth(USER_ROLE.student), CourseControllers.addFeedback);
-route.put("/:id/follow", auth(USER_ROLE.student), CourseControllers.followCourse);
-route.get("/:id/followers", auth(USER_ROLE.student), CourseControllers.getCourseFollowers);
+router.put("/:courseId/view", auth(USER_ROLE.student), CourseControllers.viewCourse);
+router.put("/:courseId/like", auth(USER_ROLE.student), CourseControllers.likeCourse);
+router.post("/:courseId/feedback", auth(USER_ROLE.student), CourseControllers.addFeedback);
+router.put("/:id/follow", auth(USER_ROLE.student), CourseControllers.followCourse);
+router.get("/:id/followers", auth(USER_ROLE.student), CourseControllers.getCourseFollowers);
+router.patch("/:courseId/lessons/:lessonId/complete", auth(USER_ROLE.student), CourseControllers.completeLesson);
+router.patch("/:courseId/topics/:topicId/complete", auth(USER_ROLE.student), CourseControllers.completeTopic);
+router.get("/:courseId/progress", auth(USER_ROLE.student), CourseControllers.myProgress);
 
 
-
-
-
-
-
-export const courseRouter = route;
+export const courseRouter = router;

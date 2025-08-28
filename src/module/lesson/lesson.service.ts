@@ -1,5 +1,6 @@
 import Lesson from "./lesson.model";
 import { ILesson } from "./lesson.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 // Create a new lesson in the database
 const createLessonInDB = async (lesson: ILesson) => {
@@ -8,9 +9,20 @@ const createLessonInDB = async (lesson: ILesson) => {
 };
 
 // Get all lessons from the database
-const getAllLessonsFromDB = async () => {
-    const result = await Lesson.find().populate("course");
-    return result;
+const getAllLessonsFromDB = async (query: Record<string, unknown>) => {
+    const lessonQuery = new QueryBuilder(Lesson.find(), query)
+        .search(['title'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await lessonQuery.modelQuery;
+    const meta = await lessonQuery.countTotal();
+    return {
+        result,
+        meta
+    };
 };
 
 // Update a lesson by its ID

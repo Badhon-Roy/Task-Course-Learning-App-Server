@@ -12,7 +12,7 @@ const createTopic = catchAsync(async (req, res) => {
 
   const isExistTopic = await Topic.findOne({ title: topic?.title });
   if (isExistTopic) {
-    throw new AppError(400,"This topic already exists");
+    throw new AppError(400, "This topic already exists");
   }
 
   const result = await TopicServices.createTopicInDB(topic);
@@ -26,12 +26,13 @@ const createTopic = catchAsync(async (req, res) => {
 
 // Get all topics
 const getAllTopics = catchAsync(async (req, res) => {
-  const result = await TopicServices.getAllTopicsFromDB();
+  const result = await TopicServices.getAllTopicsFromDB(req?.query);
   res.status(200).json({
     success: true,
     statusCode: 200,
     message: "Topics retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 

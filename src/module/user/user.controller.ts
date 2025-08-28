@@ -3,25 +3,26 @@ import { UserServices } from "./user.service";
 
 
 const createUser = catchAsync(async (req, res) => {
-    const user = req.body;
-    const result = await UserServices.createUserIntoDB(user);
-    res.status(200).json({
-        success: true,
-        statusCode: 200,
-        message: 'User created successfully',
-        data: result
-    })
+  const user = req.body;
+  const result = await UserServices.createUserIntoDB(user);
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: 'User created successfully',
+    data: result
+  })
 });
 
 // Get all users
 const getAllUsers = catchAsync(async (req, res) => {
-    const result = await UserServices.getAllUsersFromDB();
-    res.status(200).json({
-        success: true,
-        statusCode: 200,
-        message: 'Users retrieved successfully',
-        data: result
-    })
+  const result = await UserServices.getAllUsersFromDB(req?.query);
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: 'Users retrieved successfully',
+    meta: result.meta,
+    data: result.result
+  })
 });
 
 
@@ -55,8 +56,8 @@ const getTeacherFollowers = catchAsync(async (req, res) => {
 
 
 export const UserControllers = {
-    createUser,
-    getAllUsers,
-    followTeacher,
-    getTeacherFollowers
+  createUser,
+  getAllUsers,
+  followTeacher,
+  getTeacherFollowers
 }

@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { IUser } from "./user.interface";
 import User from "./user.model";
 import AppError from "../../errors/AppError";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 
 // user create into the database
@@ -11,9 +12,23 @@ const createUserIntoDB = async (user: IUser) => {
 }
 
 // get all users from the database
-const getAllUsersFromDB = async () => {
-    const result = await User.find().populate("followingTeachers", "name email").populate("followers", "name email");
-    return result;
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+    const userQuery = new QueryBuilder(User.find(), query)
+        .search(['name', 'email'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await userQuery.modelQuery
+        .populate("followingTeachers", "name email")
+        .populate("followers", "name email");
+
+    const meta = await userQuery.countTotal();
+    return {
+        result,
+        meta
+    };
 }
 
 

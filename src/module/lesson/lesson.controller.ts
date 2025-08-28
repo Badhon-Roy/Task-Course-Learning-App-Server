@@ -13,11 +13,11 @@ const createLesson = catchAsync(async (req, res) => {
   // Check if lesson with the same title already exists
   const isExistLesson = await Lesson.findOne({ title: lesson?.title });
   if (isExistLesson) {
-    throw new AppError(400,"This lesson already exists");
+    throw new AppError(400, "This lesson already exists");
   }
 
   const result = await LessonServices.createLessonInDB(lesson);
-  
+
   res.status(200).json({
     success: true,
     statusCode: 200,
@@ -28,12 +28,13 @@ const createLesson = catchAsync(async (req, res) => {
 
 // Get all lessons
 const getAllLessons = catchAsync(async (req, res) => {
-  const result = await LessonServices.getAllLessonsFromDB();
+  const result = await LessonServices.getAllLessonsFromDB(req?.query);
   res.status(200).json({
     success: true,
     statusCode: 200,
     message: "Lessons retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 

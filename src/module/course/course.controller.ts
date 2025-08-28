@@ -29,11 +29,31 @@ const createCourse = catchAsync(async (req, res) => {
 
 // Get all courses
 const getAllCourses = catchAsync(async (req, res) => {
-    const result = await CourseServices.getAllCoursesFromDB();
+    const result = await CourseServices.getAllCoursesFromDB(req.query);
     res.status(200).json({
         success: true,
         statusCode: 200,
         message: "Courses retrieved successfully",
+        meta: result.meta,
+        data: result.result,
+    });
+});
+
+// Get a single course by ID
+const getSingleCourse = catchAsync(async (req, res) => {
+    const { courseId } = req.params;
+    const result = await CourseServices.getCourseById(courseId);
+    if (!result) {
+        return res.status(404).json({
+            success: false,
+            message: "Validation Error",
+            errorMessage: "Course not found",
+        });
+    }
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Course retrieved successfully",
         data: result,
     });
 });
@@ -103,7 +123,7 @@ const likeCourse = catchAsync(async (req, res) => {
 
 // Add feedback
 const addFeedback = catchAsync(async (req, res) => {
-    const {courseId} = req.params;
+    const { courseId } = req.params;
     const studentId = req.user.id;
     const { comment } = req.body;
     const result = await CourseServices.addCourseFeedback(courseId, studentId, comment);
@@ -158,9 +178,47 @@ const getCourseFollowers = catchAsync(async (req, res) => {
 });
 
 
+const completeLesson = catchAsync(async (req, res) => {
+    const studentId = req?.user?.id;
+    const { courseId, lessonId } = req.params;
+    const result = await CourseServices.markLessonCompleted(studentId, courseId, lessonId);
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Lesson completed",
+        data: result
+    });
+});
+
+const completeTopic = catchAsync(async (req, res) => {
+    const studentId = req.user!.id;
+    const { courseId, topicId } = req.params;
+    const result = await CourseServices.markTopicCompleted(studentId, courseId, topicId);
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Topic completed",
+        data: result
+    });
+});
+
+const myProgress = catchAsync(async (req, res) => {
+    const studentId = req?.user?.id;
+    const { courseId } = req.params;
+    const result = await CourseServices.getProgressSummary(studentId, courseId);
+    res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: "Progress summary",
+        data: result
+    });
+});
+
+
 export const CourseControllers = {
     createCourse,
     getAllCourses,
+    getSingleCourse,
     updateCourse,
     deleteCourse,
     viewCourse,
@@ -168,5 +226,8 @@ export const CourseControllers = {
     addFeedback,
     courseAnalytics,
     followCourse,
-    getCourseFollowers
+    getCourseFollowers,
+    completeLesson,
+    completeTopic,
+    myProgress
 };

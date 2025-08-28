@@ -1,5 +1,6 @@
 import Topic from "./topic.model";
 import { ITopic } from "./topic.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 // Create a new topic in the database
 const createTopicInDB = async (topic: ITopic) => {
@@ -8,9 +9,20 @@ const createTopicInDB = async (topic: ITopic) => {
 };
 
 // Get all topics from the database
-const getAllTopicsFromDB = async () => {
-    const result = await Topic.find().populate("lesson");
-    return result;
+const getAllTopicsFromDB = async (query: Record<string, unknown>) => {
+    const topicQuery = new QueryBuilder(Topic.find(), query)
+        .search(['title'])
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await topicQuery.modelQuery;
+    const meta = await topicQuery.countTotal();
+    return {
+        result,
+        meta
+    };
 };
 
 // Update a topic by its ID

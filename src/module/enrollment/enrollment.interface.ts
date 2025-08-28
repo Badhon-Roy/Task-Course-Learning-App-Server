@@ -1,4 +1,4 @@
-import { Types, Document } from "mongoose";
+import { Types } from "mongoose";
 
 export interface ILessonProgress {
   lesson: Types.ObjectId;
@@ -18,6 +18,4 @@ export interface IEnrollment {
   lessonsProgress: ILessonProgress[];
   topicsProgress: ITopicProgress[];
   enrolledAt: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
